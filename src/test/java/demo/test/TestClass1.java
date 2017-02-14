@@ -15,14 +15,14 @@ public class TestClass1 {
 
     public static void main( String args[] ) throws SQLException , ClassNotFoundException {
         String jdbcdriver="com.mysql.jdbc.Driver";
-        String jdbcurl="jdbc:mysql://127.0.0.1:8066/TESTDB?useUnicode=true&characterEncoding=utf-8";
-        String username="test";
-        String password="test";
+        String jdbcurl="jdbc:mysql://192.168.199.140:8066/TESTDB?useUnicode=true&characterEncoding=utf-8";
+        String username="root";
+        String password="123456";
         System.out.println("开始连接mysql:"+jdbcurl);
         Class.forName(jdbcdriver);
         Connection c = DriverManager.getConnection(jdbcurl,username,password); 
         Statement st = c.createStatement();
-        print( "test jdbc " , st.executeQuery("select count(*) from travelrecord ")); 
+        print( "test jdbc " , st.executeQuery("select * from travelrecord ")); 
         System.out.println("OK......");
     }
 

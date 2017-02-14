@@ -24,6 +24,7 @@
 package io.mycat.manager.handler;
 
 import io.mycat.config.ErrorCode;
+import io.mycat.config.util.JinqUtil;
 import io.mycat.manager.ManagerConnection;
 import io.mycat.manager.response.ShowBackend;
 import io.mycat.manager.response.ShowBackendOld;
@@ -74,6 +75,7 @@ import io.mycat.util.StringUtil;
 public final class ShowHandler {
 
 	public static void handle(String stmt, ManagerConnection c, int offset) {
+		JinqUtil.printClassMethod(-1,stmt);
 		int rs = ManagerParseShow.parse(stmt, offset);
 		switch (rs & 0xff) {
 		case ManagerParseShow.SYSPARAM://add rainbow
@@ -248,6 +250,9 @@ public final class ShowHandler {
 			ShowDirectMemory.execute(c,1);
 			break;
 		default:
+			System.out.println("**********************");
+			System.out.println(stmt);
+			System.out.println(rs & 0xff);
 			c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
 		}
 	}
