@@ -1315,6 +1315,7 @@ public class RouterUtil {
 						for(ColumnRoutePair pair : partitionValue) {
 							AbstractPartitionAlgorithm algorithm = tableConfig.getRule().getRuleAlgorithm();
 							if(pair.colValue != null) {
+								//计算策略对应的节点编号
 								Integer nodeIndex = algorithm.calculate(pair.colValue);
 								if(nodeIndex == null) {
 									String msg = "can't find any valid datanode :" + tableConfig.getName()
@@ -1329,6 +1330,7 @@ public class RouterUtil {
 									node = dataNodes.get(nodeIndex);
 
 								} else {
+									//计算出的节点编号超过实际拥有的节点size时报错
 									node = null;
 									String msg = "Can't find a valid data node for specified node index :"
 											+ tableConfig.getName() + " -> " + tableConfig.getPartitionColumn()

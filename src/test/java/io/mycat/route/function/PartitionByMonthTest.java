@@ -66,7 +66,7 @@ public class PartitionByMonthTest {
 		Assert.assertEquals(true, 0 == partition.calculate("2015-01-31"));
 		Assert.assertEquals(true, 0 == partition.calculate("2016-01-20"));
 
-		Assert.assertEquals(true, 1 == partition.calculate("2013-02-02"));
+		Assert.assertEquals(true, 1 == partition.calculate("2013-02-02 00:00:00"));
 		Assert.assertEquals(true, 1 == partition.calculate("2014-02-01"));
 		Assert.assertEquals(true, 1 == partition.calculate("2015-02-10"));
 		Assert.assertEquals(true, 1 == partition.calculate("2015-02-28"));
