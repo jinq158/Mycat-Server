@@ -119,6 +119,7 @@ public class NonBlockingSession implements Session {
         }
         boolean autocommit = source.isAutocommit();
         final int initCount = target.size();
+        //路由节点只有一个时
         if (nodes.length == 1) {
             singleNodeHandler = new SingleNodeHandler(rrs, this);
             if (this.isPrepared()) {
@@ -137,7 +138,7 @@ public class NonBlockingSession implements Session {
             }
 
         } else {
-
+        	//路由节点有多个时
             multiNodeHandler = new MultiNodeQueryHandler(type, rrs, autocommit, this);
             if (this.isPrepared()) {
                 multiNodeHandler.setPrepared(true);

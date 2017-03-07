@@ -406,6 +406,7 @@ public class DruidSelectParser extends DefaultDruidParser {
 			return;
 		}
 //		RouterUtil.tryRouteForTables(schema, ctx, rrs, true, cachePool);
+        //需要路由的节点集合
 		SortedSet<RouteResultsetNode> nodeSet = new TreeSet<RouteResultsetNode>();
 		boolean isAllGlobalTable = RouterUtil.isAllGlobalTable(ctx, schema);
 		for (RouteCalculateUnit unit : ctx.getRouteCalculateUnits()) {

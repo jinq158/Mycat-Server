@@ -703,7 +703,7 @@ public class RouterUtil {
 		origSQL.getChars(afterLastLeftBracketIndex, origSQL.length(), newSQLBuf, insertSegOffset);
 		processSQL(sc, schema, new String(newSQLBuf), sqlType);
 	}
-
+	//实际是路由到所有的节点
 	public static RouteResultset routeToMultiNode(boolean cache,RouteResultset rrs, Collection<String> dataNodes, String stmt) {
 		RouteResultsetNode[] nodes = new RouteResultsetNode[dataNodes.size()];
 		int i = 0;
@@ -1080,7 +1080,7 @@ public class RouterUtil {
 			return routeToSingleNode(rrs, schema.getDataNode(), ctx.getSql());
 		}
 
-		TableConfig tc = schema.getTables().get(tableName);
+		TableConfig tc = schema.getTables().get(tableName);//查找需路由的表配置数据
 		if(tc == null) {
 			String msg = "can't find table define in schema " + tableName + " schema:" + schema.getName();
 			LOGGER.warn(msg);
