@@ -28,6 +28,7 @@ import com.alibaba.druid.sql.ast.expr.SQLIntegerExpr;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlInsertStatement;
 import com.alibaba.druid.sql.parser.SQLStatementParser;
 import io.mycat.route.parser.druid.MycatStatementParser;
+import io.mycat.route.parser.druid.factory.StatementParserFactory;
 
 /**
  * @author mycat
@@ -61,7 +62,7 @@ public final class ParseUtil {
 
     public static String changeInsertAddSlot(String sql,int slotValue)
     {
-        SQLStatementParser parser = new MycatStatementParser(sql);
+        SQLStatementParser parser = StatementParserFactory.getStatementParser(sql);
         MySqlInsertStatement insert = (MySqlInsertStatement) parser.parseStatement();
         insert.getColumns().add(new SQLIdentifierExpr("_slot") );
         insert.getValues().getValues().add(new SQLIntegerExpr(slotValue))  ;

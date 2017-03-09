@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import io.mycat.config.loader.xml.XMLServerLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,12 +44,13 @@ import com.alibaba.druid.wall.WallCheckResult;
 import com.alibaba.druid.wall.WallProvider;
 
 import io.mycat.MycatServer;
+import io.mycat.config.loader.xml.XMLServerLoader;
 import io.mycat.config.model.FirewallConfig;
 import io.mycat.config.model.UserConfig;
 import io.mycat.config.model.UserPrivilegesConfig;
 import io.mycat.net.handler.FrontendPrivileges;
-import io.mycat.route.parser.druid.MycatSchemaStatVisitor;
 import io.mycat.route.parser.druid.MycatStatementParser;
+import io.mycat.route.parser.druid.factory.StatementParserFactory;
 
 /**
  * @author mycat
@@ -249,7 +249,7 @@ public class MycatPrivileges implements FrontendPrivileges {
 					int index = -1;
 					
 					//TODO 此处待优化，寻找更优SQL 解析器
-					SQLStatementParser parser = new MycatStatementParser(sql);			
+					SQLStatementParser parser = StatementParserFactory.getStatementParser(sql);			
 					SQLStatement stmt = parser.parseStatement();
 					
 					if (stmt instanceof MySqlReplaceStatement || stmt instanceof SQLInsertStatement ) {		
@@ -264,7 +264,7 @@ public class MycatPrivileges implements FrontendPrivileges {
 					
 					if ( index > -1) {
 						
-						SchemaStatVisitor schemaStatVisitor = new MycatSchemaStatVisitor();
+						SchemaStatVisitor schemaStatVisitor = new SchemaStatVisitor();
 						stmt.accept(schemaStatVisitor);
 						String key = schemaStatVisitor.getCurrentTable();
 						if ( key != null ) {

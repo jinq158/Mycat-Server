@@ -50,6 +50,7 @@ import io.mycat.route.function.SlotFunction;
 import io.mycat.route.parser.druid.DruidShardingParseInfo;
 import io.mycat.route.parser.druid.MycatStatementParser;
 import io.mycat.route.parser.druid.RouteCalculateUnit;
+import io.mycat.route.parser.druid.factory.StatementParserFactory;
 import io.mycat.route.util.RouterUtil;
 import io.mycat.server.ServerConnection;
 import io.mycat.server.parser.ServerParse;
@@ -161,7 +162,7 @@ public final class ServerLoadDataInfileHandler implements LoadDataInfileHandler
         this.sql = sql;
 
 
-        SQLStatementParser parser = new MycatStatementParser(sql);
+        SQLStatementParser parser =  StatementParserFactory.getStatementParser(sql);
         statement = (MySqlLoadDataInFileStatement) parser.parseStatement();
         fileName = parseFileName(sql);
 

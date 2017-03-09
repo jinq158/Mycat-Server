@@ -57,7 +57,7 @@ public class DefaultDruidParser implements DruidParser {
 	 * @param schema
 	 * @param stmt
 	 */
-	public void parser(SchemaConfig schema, RouteResultset rrs, SQLStatement stmt, String originSql,LayerCachePool cachePool,MycatSchemaStatVisitor schemaStatVisitor) throws SQLNonTransientException {
+	public void parser(SchemaConfig schema, RouteResultset rrs, SQLStatement stmt, String originSql,LayerCachePool cachePool,SchemaStatVisitor schemaStatVisitor) throws SQLNonTransientException {
 		ctx = new DruidShardingParseInfo();
 		//设置为原始sql，如果有需要改写sql的，可以通过修改SQLStatement中的属性，然后调用SQLStatement.toString()得到改写的sql
 		ctx.setSql(originSql);
@@ -94,7 +94,7 @@ public class DefaultDruidParser implements DruidParser {
 	 * @param stmt
 	 */
 	@Override
-	public void visitorParse(RouteResultset rrs, SQLStatement stmt,MycatSchemaStatVisitor visitor) throws SQLNonTransientException{
+	public void visitorParse(RouteResultset rrs, SQLStatement stmt,SchemaStatVisitor visitor) throws SQLNonTransientException{
 
 		stmt.accept(visitor);
 		ctx.setVisitor(visitor);
@@ -109,11 +109,17 @@ public class DefaultDruidParser implements DruidParser {
 		}
 
 		List<List<Condition>> mergedConditionList = new ArrayList<List<Condition>>();
-		if(visitor.hasOrCondition()) {//包含or语句
-			//TODO
-			//根据or拆分
-			mergedConditionList = visitor.splitConditions();
-		} else {//不包含OR语句
+		if(visitor instanceof MycatSchemaStatVisitor){
+			MycatSchemaStatVisitor mycatVistor=(MycatSchemaStatVisitor)visitor;
+			if (mycatVistor.hasOrCondition()) {// 包含or语句
+				// TODO
+				// 根据or拆分
+				mergedConditionList = mycatVistor.splitConditions();
+			} else {// 不包含OR语句
+				mergedConditionList.add(visitor.getConditions());
+			}
+		}
+		else{
 			mergedConditionList.add(visitor.getConditions());
 		}
 		

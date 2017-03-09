@@ -12,6 +12,7 @@
 	<system>
 	<property name="useHandshakeV10">1</property>
 	<property name="useSqlStat">0</property>  <!-- 1为开启实时统计、0为关闭 -->
+	<property name="dbType">sqlserver</property>  <!-- 用来控制解析类的切换,目前解析类的实现只有mysql的,-->
 	<property name="useGlobleTableCheck">0</property>  <!-- 1为开启全加班一致性检测、0为关闭 -->
 
 	<property name="sequnceHandlerType">2</property>

@@ -68,6 +68,7 @@ public class XMLServerLoader {
         this.users = new HashMap<String, UserConfig>();
         this.firewall = new FirewallConfig();
         this.load();
+        System.out.println(system);
     }
 
     public SystemConfig getSystem() {

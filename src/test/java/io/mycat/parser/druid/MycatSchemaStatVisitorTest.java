@@ -1,21 +1,18 @@
 package io.mycat.parser.druid;
 
-import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
-import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 import org.junit.Test;
 
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
 import com.alibaba.druid.sql.parser.SQLStatementParser;
+import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
 import com.alibaba.druid.stat.TableStat.Condition;
 
-import io.mycat.route.impl.DruidMycatRouteStrategy;
 import io.mycat.route.parser.druid.MycatSchemaStatVisitor;
+import junit.framework.Assert;
 
 /**
  * TODO: 增加描述
@@ -117,26 +114,31 @@ public class MycatSchemaStatVisitorTest {
 		SQLStatementParser parser =null;
 		parser = new MySqlStatementParser(sql);
 
-		MycatSchemaStatVisitor visitor = null;
+		SchemaStatVisitor visitor = null;
 		SQLStatement statement = null;
 		//解析出现问题统一抛SQL语法错误
 		try {
 			statement = parser.parseStatement();
-            visitor = new MycatSchemaStatVisitor();
+            visitor = new SchemaStatVisitor();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		statement.accept(visitor);
 		
 		List<List<Condition>> mergedConditionList = new ArrayList<List<Condition>>();
-		if(visitor.hasOrCondition()) {//包含or语句
-			//TODO
-			//根据or拆分
-			mergedConditionList = visitor.splitConditions();
-		} else {//不包含OR语句
-			mergedConditionList.add(visitor.getConditions());
+		if(visitor instanceof MycatSchemaStatVisitor){
+			MycatSchemaStatVisitor mycatVistor=(MycatSchemaStatVisitor)visitor;
+			if (mycatVistor.hasOrCondition()) {// 包含or语句
+				// TODO
+				// 根据or拆分
+				mergedConditionList = mycatVistor.splitConditions();
+			} else {// 不包含OR语句
+				mergedConditionList.add(visitor.getConditions());
+			}
 		}
-		
+		else{
+			mergedConditionList.add(visitor.getConditions());
+		} 
 		return mergedConditionList;
 	}
 }

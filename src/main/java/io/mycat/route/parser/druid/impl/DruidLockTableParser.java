@@ -6,13 +6,13 @@ import java.util.List;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlLockTableStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlLockTableStatement.LockType;
+import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
 
 import io.mycat.config.model.SchemaConfig;
 import io.mycat.config.model.TableConfig;
 import io.mycat.route.RouteResultset;
 import io.mycat.route.RouteResultsetNode;
 import io.mycat.route.parser.druid.DruidParser;
-import io.mycat.route.parser.druid.MycatSchemaStatVisitor;
 import io.mycat.server.parser.ServerParse;
 import io.mycat.util.SplitUtil;
 
@@ -48,7 +48,7 @@ public class DruidLockTableParser extends DefaultDruidParser implements DruidPar
 	}
 	
 	@Override
-	public void visitorParse(RouteResultset rrs, SQLStatement stmt, MycatSchemaStatVisitor visitor)
+	public void visitorParse(RouteResultset rrs, SQLStatement stmt, SchemaStatVisitor visitor)
 			throws SQLNonTransientException {
 		// 对于lock tables table1 write, table2 read类型的多表锁语句，DruidParser只能解析出table1，
 		// 由于多表锁在分布式场景处理逻辑繁琐，且应用场景较少，因此在此处对这种锁表语句进行拦截。

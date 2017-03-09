@@ -9,20 +9,20 @@ import com.alibaba.druid.sql.ast.statement.SQLCharacterDataType;
 import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
 import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
+import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
 
 import io.mycat.config.model.SchemaConfig;
 import io.mycat.config.model.TableConfig;
 import io.mycat.route.RouteResultset;
 import io.mycat.route.function.AbstractPartitionAlgorithm;
 import io.mycat.route.function.SlotFunction;
-import io.mycat.route.parser.druid.MycatSchemaStatVisitor;
 import io.mycat.util.StringUtil;
 
 
 public class DruidCreateTableParser extends DefaultDruidParser {
 
 	@Override
-	public void visitorParse(RouteResultset rrs, SQLStatement stmt, MycatSchemaStatVisitor visitor) {
+	public void visitorParse(RouteResultset rrs, SQLStatement stmt, SchemaStatVisitor visitor) {
 	}
 	
 	@Override

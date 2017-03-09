@@ -26,8 +26,10 @@ public class ShardingbyDateTest {
 
 			long l = System.currentTimeMillis();
 			for (int i = fromid; i < count; i++) {
+				for (int j = 0; j < 10000; j++) {
 				st.executeUpdate("insert into ta(createdate,jsonDate,transType,relationid)values('2014-0" + (i +1)
 						+ "-12 00:01:55','sdf','TS01','" + UUID.randomUUID().toString() + "')");
+				}
 			}
 			long end = System.currentTimeMillis();
 			System.out.println("OK......time=" + (end - l) + " per=" + (end - l) / count + " fromid=" + fromid
@@ -50,24 +52,49 @@ public class ShardingbyDateTest {
 		Statement st = c.createStatement();
 		long l = System.currentTimeMillis();
 		int count = 10000;
-		ResultSet rs = st.executeQuery("select top 200 * from ta ");
+		ResultSet rs = st.executeQuery("select top 200 * from ta where createdate>'2014-01-01 00:00:00' and createdate<'2014-01-31 00:00:00' order by createdate ");
 		while (rs.next()) {
-			rs.getLong("id");
+//			System.out.println("id="+rs.getLong("id")+" relationid="+rs.getString("relationid")+" createtime="+rs.getTimestamp("createdate"));
 		}
 		long end = System.currentTimeMillis();
 		System.out.println("finished......time=" + (end - l) + " per=" + (end - l) / count);
 	}
+	void selectbyId(Connection c) throws SQLException{
+		Statement st = c.createStatement();
+		long l = System.currentTimeMillis();
+		int count = 10000;
+		ResultSet rs = st.executeQuery("select * from ta where relationid='b97562d2-342d-45a0-8bd3-c6285541cacc'");
+		long end = System.currentTimeMillis();
+		System.out.println("finished......time=" + (end - l) + " per=" + (end - l) / count);
+	}
+	void selectbyIds(Connection c) throws SQLException{
+		Statement st = c.createStatement();
+		long l = System.currentTimeMillis();
+		int count = 10000;
+		ResultSet rs = st.executeQuery("select * from ta where id in(112358,112374,112367)");
+		long end = System.currentTimeMillis();
+		System.out.println("select by ids finished......time=" + (end - l) + " per=" + (end - l) / count);
+	}
 
 	public static void main(String args[]) throws Exception {
 		ShardingbyDateTest t = new ShardingbyDateTest();
-		t.clean(getConnection());
+//		t.clean(getConnection());
 		// t.clean(getSqlServerConnection());
-		t.insertPartitionbyID(getConnection(), 0, 4);
+//		t.insertPartitionbyID(getConnection(), 0, 4);
+		
 		// t.insertPartitionbyIDThread();
 		// t.insertPartitionbyID(getSqlServerConnection(),10000);
 
-		t.select(getConnection());
-		// t.select(getSqlServerConnection());
+		Connection conn=getConnection();
+//		t.select(conn);
+//		t.select(conn);
+		t.selectbyId(conn);
+		t.selectbyIds(conn);
+		conn=getSqlServerConnection();
+
+		t.select(conn);
+//		 t.select(conn);
+		 t.selectbyId(conn);
 
 		// t.shardByDate();
 	}

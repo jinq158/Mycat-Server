@@ -2,18 +2,11 @@ package io.mycat.route.impl;
 
 import java.sql.SQLNonTransientException;
 import java.sql.SQLSyntaxErrorException;
-import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.alibaba.druid.sql.ast.SQLExpr;
-import com.alibaba.druid.sql.ast.expr.SQLIntegerExpr;
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlInsertStatement;
-import io.mycat.config.model.rule.RuleConfig;
-import io.mycat.route.function.AbstractPartitionAlgorithm;
-import io.mycat.route.function.SlotFunction;
-import io.mycat.route.parser.util.ParseUtil;
-import org.slf4j.Logger; import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
@@ -23,21 +16,25 @@ import com.alibaba.druid.sql.ast.statement.SQLInsertStatement;
 import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.ast.statement.SQLTableSource;
 import com.alibaba.druid.sql.ast.statement.SQLUpdateStatement;
+import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlInsertStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlReplaceStatement;
-import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
 import com.alibaba.druid.sql.parser.SQLStatementParser;
+import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
 import com.google.common.base.Strings;
 
 import io.mycat.cache.LayerCachePool;
 import io.mycat.config.model.SchemaConfig;
+import io.mycat.config.model.rule.RuleConfig;
 import io.mycat.route.RouteResultset;
 import io.mycat.route.RouteResultsetNode;
+import io.mycat.route.function.SlotFunction;
 import io.mycat.route.parser.druid.DruidParser;
 import io.mycat.route.parser.druid.DruidParserFactory;
 import io.mycat.route.parser.druid.DruidShardingParseInfo;
-import io.mycat.route.parser.druid.MycatSchemaStatVisitor;
-import io.mycat.route.parser.druid.MycatStatementParser;
 import io.mycat.route.parser.druid.RouteCalculateUnit;
+import io.mycat.route.parser.druid.factory.SchemaStatVistorFactory;
+import io.mycat.route.parser.druid.factory.StatementParserFactory;
+import io.mycat.route.parser.util.ParseUtil;
 import io.mycat.route.util.RouterUtil;
 import io.mycat.server.parser.ServerParse;
 
@@ -55,12 +52,12 @@ public class DruidMycatRouteStrategy extends AbstractRouteStrategy {
 		 */
 		SQLStatementParser parser = null;
 		if (schema.isNeedSupportMultiDBType()) {
-			parser = new MycatStatementParser(stmt);
+			parser = StatementParserFactory.getStatementParser(stmt);
 		} else {
-			parser = new MySqlStatementParser(stmt); 
+			parser = StatementParserFactory.getStatementParser(stmt);
 		}
 
-		MycatSchemaStatVisitor visitor = null;
+		SchemaStatVisitor visitor = null;
 		SQLStatement statement;
 		
 		/**
@@ -68,7 +65,7 @@ public class DruidMycatRouteStrategy extends AbstractRouteStrategy {
 		 */
 		try {
 			statement = parser.parseStatement();
-            visitor = new MycatSchemaStatVisitor();
+            visitor =SchemaStatVistorFactory.getSchemaStatVistor();
 		} catch (Exception t) {
 	        LOGGER.error("DruidMycatRouteStrategyError", t);
 			throw new SQLSyntaxErrorException(t);

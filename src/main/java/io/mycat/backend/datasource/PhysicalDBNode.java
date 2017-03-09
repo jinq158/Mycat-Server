@@ -88,7 +88,7 @@ public class PhysicalDBNode {
 			dbPool.init(dbPool.activedIndex);
 		}
 	}
-	
+	//TODO temp note the logger
 	public void getConnection(String schema,boolean autoCommit, RouteResultsetNode rrs,
 							ResponseHandler handler, Object attachment) throws Exception {
 		checkRequest(schema);

@@ -8,17 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
-import io.mycat.SimpleCachePool;
-import io.mycat.cache.LayerCachePool;
-import io.mycat.config.loader.SchemaLoader;
-import io.mycat.config.loader.xml.XMLSchemaLoader;
-import io.mycat.config.model.SchemaConfig;
-import io.mycat.route.parser.druid.DruidShardingParseInfo;
-import io.mycat.route.parser.druid.MycatSchemaStatVisitor;
-import io.mycat.route.parser.druid.MycatStatementParser;
-import io.mycat.route.parser.druid.RouteCalculateUnit;
-import io.mycat.route.factory.RouteStrategyFactory;
-
 
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
@@ -26,6 +15,16 @@ import com.alibaba.druid.sql.parser.SQLStatementParser;
 import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
 import com.alibaba.druid.stat.TableStat.Condition;
 
+import io.mycat.SimpleCachePool;
+import io.mycat.cache.LayerCachePool;
+import io.mycat.config.loader.SchemaLoader;
+import io.mycat.config.loader.xml.XMLSchemaLoader;
+import io.mycat.config.model.SchemaConfig;
+import io.mycat.route.factory.RouteStrategyFactory;
+import io.mycat.route.parser.druid.DruidShardingParseInfo;
+import io.mycat.route.parser.druid.MycatSchemaStatVisitor;
+import io.mycat.route.parser.druid.MycatStatementParser;
+import io.mycat.route.parser.druid.RouteCalculateUnit;
 import junit.framework.Assert;
 
 public class DQLRouteTest {
@@ -56,11 +55,11 @@ public class DQLRouteTest {
 			parser = new MySqlStatementParser(stmt);
 		}
 		SQLStatement statement;
-		MycatSchemaStatVisitor visitor = null;
+		SchemaStatVisitor visitor = null;
 
 		try {
 			statement = parser.parseStatement();
-			visitor = new MycatSchemaStatVisitor();
+			visitor = new SchemaStatVisitor();
 		} catch (Exception t) {
 			throw new SQLSyntaxErrorException(t);
 		}
@@ -72,16 +71,22 @@ public class DQLRouteTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<RouteCalculateUnit> visitorParse(RouteResultset rrs, SQLStatement stmt, MycatSchemaStatVisitor visitor) throws Exception {
+	private List<RouteCalculateUnit> visitorParse(RouteResultset rrs, SQLStatement stmt, SchemaStatVisitor visitor) throws Exception {
 
 		stmt.accept(visitor);
 
 		List<List<Condition>> mergedConditionList = new ArrayList<List<Condition>>();
-		if (visitor.hasOrCondition()) {// 包含or语句
-			// TODO
-			// 根据or拆分
-			mergedConditionList = visitor.splitConditions();
-		} else {// 不包含OR语句
+		if(visitor instanceof MycatSchemaStatVisitor){
+			MycatSchemaStatVisitor mycatVistor=(MycatSchemaStatVisitor)visitor;
+			if (mycatVistor.hasOrCondition()) {// 包含or语句
+				// TODO
+				// 根据or拆分
+				mergedConditionList = mycatVistor.splitConditions();
+			} else {// 不包含OR语句
+				mergedConditionList.add(visitor.getConditions());
+			}
+		}
+		else{
 			mergedConditionList.add(visitor.getConditions());
 		}
 

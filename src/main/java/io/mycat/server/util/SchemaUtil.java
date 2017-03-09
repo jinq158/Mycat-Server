@@ -7,7 +7,6 @@ import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
 
 import io.mycat.MycatServer;
 import io.mycat.config.model.SchemaConfig;
-import io.mycat.route.parser.druid.MycatSchemaStatVisitor;
 import io.mycat.server.parser.ServerParse;
 
 import java.util.Map;
@@ -22,7 +21,7 @@ public class SchemaUtil
     public static SchemaInfo parseSchema(String sql)
     {
         SQLStatementParser parser = new MySqlStatementParser(sql);
-      return parseTables(parser.parseStatement(),new MycatSchemaStatVisitor()  );
+      return parseTables(parser.parseStatement(),new SchemaStatVisitor()  );
     }
     public static String detectDefaultDb(String sql, int type)
     {

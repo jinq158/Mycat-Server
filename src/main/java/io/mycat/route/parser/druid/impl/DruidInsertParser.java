@@ -14,6 +14,7 @@ import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
 import com.alibaba.druid.sql.ast.expr.SQLIntegerExpr;
 import com.alibaba.druid.sql.ast.statement.SQLInsertStatement.ValuesClause;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlInsertStatement;
+import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
 
 import io.mycat.backend.mysql.nio.handler.FetchStoreNodeOfChildTableHandler;
 import io.mycat.config.model.SchemaConfig;
@@ -22,7 +23,6 @@ import io.mycat.route.RouteResultset;
 import io.mycat.route.RouteResultsetNode;
 import io.mycat.route.function.AbstractPartitionAlgorithm;
 import io.mycat.route.function.SlotFunction;
-import io.mycat.route.parser.druid.MycatSchemaStatVisitor;
 import io.mycat.route.parser.druid.RouteCalculateUnit;
 import io.mycat.route.parser.util.ParseUtil;
 import io.mycat.route.util.RouterUtil;
@@ -31,7 +31,7 @@ import io.mycat.util.StringUtil;
 
 public class DruidInsertParser extends DefaultDruidParser {
 	@Override
-	public void visitorParse(RouteResultset rrs, SQLStatement stmt, MycatSchemaStatVisitor visitor) throws SQLNonTransientException {
+	public void visitorParse(RouteResultset rrs, SQLStatement stmt, SchemaStatVisitor visitor) throws SQLNonTransientException {
 		
 	}
 	

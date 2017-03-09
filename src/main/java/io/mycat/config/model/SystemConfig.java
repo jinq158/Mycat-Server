@@ -150,8 +150,11 @@ public final class SystemConfig {
 	private int packetHeaderSize = 4;
 	private int maxPacketSize = 16 * 1024 * 1024;
 	private int mycatNodeId=1;
+	
+
 	private int useCompression =0;	
 	private int useSqlStat = 1;
+	private String dbType="mysql";
 	
 	// 是否使用HandshakeV10Packet来与client进行通讯, 1:是 , 0:否(使用HandshakePacket)
 	// 使用HandshakeV10Packet为的是兼容高版本的jdbc驱动, 后期稳定下来考虑全部采用HandshakeV10Packet来通讯
@@ -885,6 +888,7 @@ public final class SystemConfig {
 				+ ", usingAIO=" + usingAIO 
 				+ ", packetHeaderSize=" + packetHeaderSize 
 				+ ", maxPacketSize=" + maxPacketSize
+				+ ", dbType=" + dbType
 				+ ", mycatNodeId=" + mycatNodeId + "]";
 	}
 
@@ -928,6 +932,12 @@ public final class SystemConfig {
 	public void setUseHandshakeV10(int useHandshakeV10) {
 		this.useHandshakeV10 = useHandshakeV10;
 	}
-	
+	public String getDbType() {
+		return dbType;
+	}
+
+	public void setDbType(String dbType) {
+		this.dbType = dbType;
+	}
 	
 }

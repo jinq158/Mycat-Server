@@ -3,15 +3,11 @@ package io.mycat.route.parser.druid.impl;
 import java.sql.SQLNonTransientException;
 
 import com.alibaba.druid.sql.ast.SQLStatement;
-
-
 import com.alibaba.druid.sql.ast.statement.SQLAlterTableStatement;
+import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
 
-import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
-import com.alibaba.druid.sql.parser.SQLStatementParser;
 import io.mycat.config.model.SchemaConfig;
 import io.mycat.route.RouteResultset;
-import io.mycat.route.parser.druid.MycatSchemaStatVisitor;
 import io.mycat.util.StringUtil;
 
 /**
@@ -21,7 +17,7 @@ import io.mycat.util.StringUtil;
  */
 public class DruidAlterTableParser extends DefaultDruidParser {
 	@Override
-	public void visitorParse(RouteResultset rrs, SQLStatement stmt,MycatSchemaStatVisitor visitor) throws SQLNonTransientException {
+	public void visitorParse(RouteResultset rrs, SQLStatement stmt,SchemaStatVisitor visitor) throws SQLNonTransientException {
 		
 	}
 	@Override

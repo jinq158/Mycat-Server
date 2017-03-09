@@ -5,25 +5,25 @@
 	<schema name="TESTDB" checkSQLschema="false" sqlMaxLimit="100">
 		<!-- auto sharding by id (long) -->
 		<!-- <table name="travelrecord" dataNode="dn1,dn2,dn3" rule="auto-sharding-long" /> -->
-		<table name="ta" primaryKey="ID" autoIncrement="false" dataNode="dn1,dn2,dn3"  rule="sharding-by-month" />
-		 
+		<table name="ta" primaryKey="ID" autoIncrement="false" dataNode="local$1-3"  rule="sharding-by-month" />
+		<table name="t_global" primaryKey="ID" type="global" dataNode="local$1-3"/>
+		
+
 	</schema>
-	<dataNode name="dn1" dataHost="localhost2" database="db1" />
-	<dataNode name="dn2" dataHost="localhost2" database="db2" />
-	<dataNode name="dn3" dataHost="localhost2" database="db3" />
-	  
+	<!-- <dataNode name="remote$1-2" dataHost="localhost1" database="db$1-2" /> -->
+	<dataNode name="local$1-3" dataHost="localhost2" database="db$1-3" />
 
 	<!-- <dataHost name="localhost1" maxCon="1000" minCon="10" balance="0" dbType="sqlserver"	dbDriver="jdbc">
 		 <heartbeat></heartbeat> 
 		 <writeHost host="hostM1" url="jdbc:sqlserver://192.168.237.140:1433" user="sa" password="123"> </writeHost>
 	</dataHost> -->
-	<!-- <dataHost name="localhost3" maxCon="1000" minCon="10" balance="0" dbType="sqlserver"	dbDriver="jdbc">
+	<!-- <dataHost name="localhost1" maxCon="1000" minCon="2" balance="0" dbType="sqlserver"	dbDriver="jdbc">
 		 <heartbeat></heartbeat> 
-		 <writeHost host="hostM1" url="jdbc:sqlserver://192.168.237.140:1433" user="sa" password="123"> </writeHost>
+		 <writeHost host="hostM1" url="jdbc:sqlserver://192.168.1.204:1433" user="sa" password="123456789"> </writeHost>
 	</dataHost> -->
-	<dataHost name="localhost2" maxCon="1000" minCon="10" balance="0" dbType="sqlserver"	dbDriver="jdbc">
+	<dataHost name="localhost2" maxCon="1000" minCon="2" balance="0" dbType="sqlserver"	dbDriver="jdbc">
 		 <heartbeat></heartbeat> 
-		 <writeHost host="hostM2" url="jdbc:sqlserver://192.168.237.141:1433" user="sa" password="123"> </writeHost>
+		 <writeHost host="hostM2" url="jdbc:sqlserver://192.168.237.143:1433" user="sa" password="123"> </writeHost>
 	</dataHost>
 	
 </mycat:schema>
